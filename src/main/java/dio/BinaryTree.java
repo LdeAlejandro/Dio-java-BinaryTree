@@ -1,0 +1,243 @@
+package dio;
+
+public class BinaryTree<T extends Comparable<T>> {
+
+    public BinNo <T> raiz;
+
+    public BinaryTree() {
+        raiz = null;
+    }
+
+    public void inserir(T conteudo){
+         BinNo<T> novoNo = new BinNo<T>(conteudo); // cria um novo no
+         this.raiz = insere(raiz, novoNo); // insere o novo no
+    }
+    private BinNo<T> insere( BinNo<T> atual, BinNo<T> novoNo) {
+        if(atual == null){ // se a raiz for nula
+            return novoNo; // retorna o novoNo
+        }
+        // Verificar com compareTo se o conteúdo do novo nó é menor que o conteúdo do nó atual.
+        // Se o conteudo  do atual for menor que o novo retorna: -1
+        // Se o conteudo do atual for igual que o novo retorna:   0
+        // Se o conteudo do atual for maior que o novo retorna:   1
+        else if (novoNo.getConteudo().compareTo(atual.getConteudo()) < 0){ // O retorno da comparação verifica que seja menor que 0, Verifica se o conteúdo do novo nó é menor que o conteúdo do nó atual.
+
+            atual.setNoEsq(insere(atual.getNoEsq(), novoNo)); // insere o novo no na esquerda
+        }
+        else{
+
+            atual.setNoDir(insere(atual.getNoDir(), novoNo)); // insere o novo no na direita
+
+        }
+
+        return atual;
+
+    }
+
+    // Exemplo de entrada:
+    // Árvore:
+    //         5
+    //        / \
+    //       3   7
+    //      / \ / \
+    //     2  4 6  8
+
+    // Exemplo de saída (in-order): 2, 3, 4, 5, 6, 7, 8
+    public void exibirInOrdem(){
+        System.out.println("\n Exibindo In ordem: ");
+        exibirInOrdem(this.raiz);
+    }
+
+    private void exibirInOrdem(BinNo<T> atual){
+        if(atual != null){
+            exibirInOrdem(atual.getNoEsq()); // exibe os da esquerda
+            System.out.print(atual.getConteudo() + ", "); // exibe o conteudo
+            exibirInOrdem(atual.getNoDir()); // exibe os da direita
+        }
+    }
+
+    // Exibe a árvore em pós-ordem (post-order).
+    // 1. Visita a subárvore esquerda.
+    // 2. Visita a subárvore direita.
+    // 3. Visita o nó atual.
+
+    // Exemplo de entrada:
+    // Árvore:
+    //         5
+    //        / \
+    //       3   7
+    //      / \ / \
+    //     2  4 6  8
+
+    // Exemplo de saída (post-order): 2, 4, 3, 6, 8, 7, 5
+    public void exibirPosOrdem(){
+        System.out.println("\n Exibindo Pos ordem: ");
+        exibirPosOrdem(this.raiz);
+    }
+
+    private void exibirPosOrdem(BinNo<T> atual){
+        if(atual != null){
+            exibirPosOrdem(atual.getNoEsq()); // exibe os da esquerda
+            exibirPosOrdem(atual.getNoDir()); // exibe os da direita
+            System.out.print(atual.getConteudo() + ", "); // exibe o conteudo
+        }
+    }
+
+    // Exibe a árvore em pré-ordem (pre-order).
+    // 1. Visita o nó atual.
+    // 2. Visita a subárvore esquerda.
+    // 3. Visita a subárvore direita.
+
+    // Exemplo de entrada:
+    // Árvore:
+    //         5
+    //        / \
+    //       3   7
+    //      / \ / \
+    //     2  4 6  8
+
+    // Exemplo de saída (pre-order): 5, 3, 2, 4, 7, 6, 8
+    public void exibirPreOrdem(){
+        System.out.println("\n Exibindo Pre ordem: ");
+        exibirPreOrdem(this.raiz);
+    }
+
+    private void exibirPreOrdem(BinNo<T> atual){
+        if(atual != null){
+            System.out.print(atual.getConteudo() + ", "); // exibe o conteudo
+            exibirPreOrdem(atual.getNoEsq()); // exibe os da esquerda
+            exibirPreOrdem(atual.getNoDir()); // exibe os da direita
+        }
+    }
+
+    /*
+    Resumo do Algoritmo de Remoção:
+
+    1. **Busca pelo nó**:
+        O código percorre a árvore binária para encontrar o nó com o valor correspondente ao conteúdo a ser removido.
+
+    2. **Remoção do nó**:
+        - Se o nó a ser removido não tiver filhos (ou tiver apenas um filho), ele é removido e o nó pai é atualizado para apontar para o filho (caso exista).
+        - Se o nó a ser removido tiver dois filhos, ele é substituído pelo **sucessor** (o menor valor da subárvore à direita do nó) ou pelo **antecessor** (o maior valor da subárvore à esquerda do nó), mantendo a estrutura da árvore.
+
+    3. **Ajustes de referências**:
+        - Quando o nó removido possui dois filhos, o sucessor ou antecessor é encontrado e colocado no lugar do nó a ser removido, e suas referências (filho esquerdo e direito) são ajustadas adequadamente.
+*/
+
+
+    public void remover (T conteudo){ // remove um nó
+        try {
+            BinNo <T> atual = this.raiz; // nó atual
+            BinNo <T> pai = null;
+            BinNo <T> filho = null;
+            BinNo <T> temp = null;
+
+            System.out.println("\n Removendo: " + conteudo);
+
+            // Encontra o nó a ser removido:
+            // Busca pelo nó a ser removido na árvore.
+            // O loop percorre a árvore enquanto o nó atual for diferente do nó target e não for nulo.
+            // O nó pai é atualizado a cada iteração para manter a referência ao nó que está sendo comparado.
+            // Dependendo do valor do nó atual em relação ao nó target (menor ou maior), a busca continua para a esquerda ou para a direita.
+
+            while(atual != null && !atual.getConteudo().equals(conteudo)){ // enquanto o nó atual for diferente do nó target e o nó atual for diferente de nulo
+                pai = atual; // pai recebe o nó atual
+                if(conteudo.compareTo(atual.getConteudo()) < 0){ // se o conteúdo do nó target for menor que o conteúdo do nó atual
+                    atual = atual.getNoEsq(); // atual recebe o nó da esquerda
+                }else{
+                    atual = atual.getNoDir(); // atual recebe o nó da direita;
+                }
+            }
+
+            if(atual == null){ // se o nó atual for nulo
+                System.out.println("Conteudo não encontrado. Bloco Try");
+            }
+
+            // Caso o nó a ser removido seja a raiz (pai == null):
+            // 1. Se o nó não tiver filho direito, a raiz será substituída pelo nó da esquerda.
+            // 2. Se o nó não tiver filho esquerdo, a raiz será substituída pelo nó da direita.
+            // 3. Se o nó tem dois filhos, encontra-se o sucessor (menor valor à direita)
+            //    e ele substitui o nó removido, mantendo a estrutura da árvore. O sucessor é o nó mais à
+            //    esquerda da subárvore direita (ou o maior da subárvore esquerda caso a subárvore direita não exista).
+            // Exemplo:
+            // Árvore original:                       Após remoção de 10:
+            //         10                                    12
+            //        /  \                                 /   \
+            //       5   15                               5     15
+            //      / \   / \                            / \      \
+            //     3   7 12  18                         3   7      18
+            //    O sucessor 12 substitui a raiz (10) e ajusta as referências para manter a estrutura da árvore binária.
+
+
+            if(pai == null){ // se o pai for nulo
+                if(atual.getNoDir() == null){ // se o nó atual nao tiver filho direito
+                    this.raiz = atual.getNoEsq(); // raiz recebe o nó da esquerda
+                } else if(atual.getNoEsq() == null){ // se o nó atual nao tiver filho esquerdo
+                    this.raiz = atual.getNoDir(); // raiz recebe o nó da direita
+                } else { // se o nó atual tiver dois filhos
+                    for(temp = atual, filho = atual.getNoEsq(); // enquanto o filho for diferente de nulo
+                        filho.getNoDir() != null; // enquanto o filho for diferente de nulo
+                        temp = filho, filho = filho.getNoDir() // filho recebe o filho da direita
+                    ){
+                        if (filho != atual.getNoEsq()) { // se o filho for diferente do filho da esquerda
+                            temp.setNoDir(filho.getNoEsq()); // temp recebe o filho da esquerda
+                            filho.setNoEsq(raiz.getNoEsq()); // filho recebe o filho da esquerda
+                        }
+                    }
+
+                    filho.setNoDir(atual.getNoDir()); // filho recebe o filho da direita
+                    this.raiz = filho; // raiz recebe o nó da direita
+                }
+            }else if(atual.getNoDir() == null){ // se o nó atual nao tiver filho direito
+
+                if (pai.getNoEsq() == atual){ // se o pai for igual ao nó atual
+                    pai.setNoEsq(atual.getNoEsq()); // pai recebe o nó da esquerda
+                }else {
+                    pai.setNoDir(atual.getNoEsq()); // pai recebe o nó da esquerda
+                }
+            }else if(atual.getNoEsq() == null){ // se o nó atual nao tiver filho esquerdo
+
+                if (pai.getNoEsq() == atual) { // se o pai for igual ao nó atual
+                    pai.setNoEsq(atual.getNoDir()); // pai recebe o nó da direita
+                }else {
+                    pai.setNoDir(atual.getNoDir()); // pai recebe o nó da direita
+                }
+            }else{ // Caso o nó tenha dois filhos
+                // Usando o for para encontrar o sucessor
+                for(temp = atual, filho = atual.getNoEsq();
+                    filho.getNoDir() != null;  // enquanto o filho for diferente de nulo
+                    temp = filho, filho = filho.getNoDir()) { // filho recebe o filho da direita
+                    // Ajusta as referências de acordo com a posição do filho
+                    if(filho != atual.getNoEsq()){ // se o filho for diferente do filho da esquerda
+                        temp.setNoDir(filho.getNoEsq()); // temp recebe o filho da esquerda
+                        filho.setNoEsq(atual.getNoEsq()); // filho recebe o filho da esquerda
+                    }
+                }
+                filho.setNoDir(atual.getNoDir()); // Atualiza o ponteiro do sucessor
+                if(pai.getNoEsq() == atual) {
+                    pai.setNoEsq(filho); // Ajusta o ponteiro do pai
+                } else {
+                    pai.setNoDir(filho); // Ajusta o ponteiro do pai
+                }
+            }
+
+
+        } catch (NullPointerException erro) {
+            System.out.println("Conteudo não encontrado. Bloco Catch");
+        }
+    }
+
+    // Metodo para imprimir a árvore de forma vertical (com as raízes à esquerda e as folhas à direita)
+    public void imprimirArvore() {
+        imprimirArvore(this.raiz, "", true);
+    }
+
+    private void imprimirArvore(BinNo<T> no, String prefixo, boolean éEsquerda) { //
+
+        if (no != null) {
+            System.out.println(prefixo + (éEsquerda ? "├── " : "└── ") + no.getConteudo());
+            imprimirArvore(no.getNoEsq(), prefixo + (éEsquerda ? "│   " : "    "), true);
+            imprimirArvore(no.getNoDir(), prefixo + (éEsquerda ? "│   " : "    "), false);
+        }
+    }
+}
